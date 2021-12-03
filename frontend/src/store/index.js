@@ -1,5 +1,4 @@
 import { createStore } from "vuex";
-import { loginApi } from "@/api";
 
 export default createStore({
   state() {
@@ -12,15 +11,14 @@ export default createStore({
     };
   },
   mutations: {
-    login(state, info) {
-        state.userinfo;
-        console.log("info", info)
+    login(state, data) {
+        state.userinfo = data;
+        console.log("userinfo", state.userinfo)
     },
   },
   actions: {
-    login(context) {
-        loginApi()
-        context.commit("login", 10);
+    login(context, data) {
+      context.commit('login', data)
     },
   },
 });

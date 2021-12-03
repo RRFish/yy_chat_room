@@ -3,33 +3,29 @@
   <div>帳號: <input v-model="loginForm.account" type="text"></div>
   <div>密碼: <input v-model="loginForm.password" type="text"></div>
   <button @click="loginHandle">登入</button>
-  <button @click="test">tt</button>
 </template>
 
 <script>
+import { loginApi } from "@/api";
+
 export default {
     name: "Login",
     data(){
         return {
             loginForm:{
-                account: "",
-                password: ""
+                account: "user",
+                password: "123456"
             }
         }
     },
     methods:{
         loginHandle(){
-            if(this.userlogin(this.loginForm)){
-                this.$router.push("/index")
-            }
+            loginApi(this.loginForm).then((res) => {
+                this.$store.dispatch("login", res.data).then(()=>{
+                    this.$router.push("/index")
+                })
+            })
         },
-        userlogin(form){
-            if(form.account=="user"&&form.password=="123456") return true
-            return false
-        },
-        test(){
-            this.$store.dispatch("login")
-        }
     }
 };
 </script>

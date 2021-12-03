@@ -1,11 +1,12 @@
-function loginApi(){
-    Vue.axios.get(api).then((response) => {
-        console.log("test")
-      })
+
+import request from "@/utils/request.js"
+
+export function loginApi(data){
+    return request({
+      url: 'login',
+      method: 'post',
+      data      
+    })
 }
 
-
-export default {
-    loginApi
-}
 
