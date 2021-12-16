@@ -9,4 +9,11 @@ export function loginApi(data){
     })
 }
 
+export function chatMessageApi(){
+    return request({
+      url: 'chat_message',
+      method: 'get'
+    })
+}
+
 

@@ -21,9 +21,11 @@ export default {
     methods:{
         loginHandle(){
             loginApi(this.loginForm).then((res) => {
-                this.$store.dispatch("login", res.data).then(()=>{
-                    this.$router.push("/index")
-                })
+                if(res.data.code==200){
+                    this.$store.dispatch("login", res.data).then(()=>{
+                        this.$router.push("/index")
+                    })
+                }
             })
         },
     }

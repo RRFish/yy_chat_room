@@ -7,7 +7,8 @@ export default createStore({
         account:"",
         password:"",
         token:"",
-      }
+      },
+      chatMessage:[],
     };
   },
   mutations: {
@@ -15,10 +16,22 @@ export default createStore({
         state.userinfo = data;
         console.log("userinfo", state.userinfo)
     },
+    chatMessagePush(state, data) {
+      state.chatMessage.push(data);
+    },
+    chatMessageSet(state, data) {
+      state.chatMessage = data;
+    },
   },
   actions: {
     login(context, data) {
       context.commit('login', data)
+    },
+    chatMessagePush(context, data){
+      context.commit("chatMessagePush", data)
+    },
+    chatMessageSet(context, data){
+      context.commit("chatMessageSet", data)
     },
   },
 });

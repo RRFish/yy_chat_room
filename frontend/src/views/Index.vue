@@ -1,11 +1,60 @@
 <template>
-  <h1>This is a index page</h1>
+  <ul id="messages">
+    <li v-for="item in messagesComputed" :key="item">{{item.user_id}}-{{ item.message }}</li>
+  </ul>
+  <form id="form" action="">
+    <input id="input" v-model="messageForm.message" autocomplete="off" /><button @click.prevent="sendChatMessage">Send</button>
+  </form>
 </template>
 
 <script>
-
+import { loginApi, chatMessageApi } from "@/api"
+import { sendMessageSocket } from "@/utils/socket.js"
 
 export default {
     name: "Index",
+    data(){
+      return {
+        messages:[1,2,3,4],
+        messageForm:{
+          message: undefined
+        }
+      }
+    },
+    created(){
+      this.getChatMessage()
+    },
+    methods:{
+      sendChatMessage(){
+        sendMessageSocket(this.messageForm.message)
+
+      },
+      getChatMessage(){
+        chatMessageApi().then((res)=>{
+          this.$store.dispatch("chatMessageSet", res.data.data)
+        })
+      }
+
+    },
+    computed: {
+      messagesComputed(){
+        console.log("this.$store.state.chatMessage", this.$store.state.chatMessage)
+        return this.$store.state.chatMessage
+      }
+    }
 };
 </script>
+
+
+<style>
+  body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+  #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+  #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
+  #input:focus { outline: none; }
+  #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
+
+  #messages { list-style-type: none; margin: 0; padding: 0; }
+  #messages > li { padding: 0.5rem 1rem; }
+  #messages > li:nth-child(odd) { background: #efefef; }
+</style>

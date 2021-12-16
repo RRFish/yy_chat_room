@@ -1,23 +1,23 @@
 import { io } from "socket.io-client";
-
-const socket = io("http://localhost:7000", {
-  reconnectionDelayMax: 10000,
-  // auth: {
-  //   token: "123"
-  // },
-  // query: {
-  //   "my-key": "my-value"
-  // }
-});
+import store from "@/store"
+const socket = io("http://localhost:7000");
 
 
-
-socket.on("connection", ()=>{
-  console.log("連線成功")
+socket.on("chat message", (data)=>{
+  console.log("data", data)
+  store.dispatch("chatMessagePush",data)
 })
 
+function sendMessageSocket(message){
+  socket.emit('chat message', {
+    user_id: store.state.userinfo.user_id,
+    message: message,
+    type: 0
+  });
+
+}
 
 
 export {
-  socket
+  sendMessageSocket
 }
