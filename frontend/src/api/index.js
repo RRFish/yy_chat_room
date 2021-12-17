@@ -9,6 +9,14 @@ export function loginApi(data){
     })
 }
 
+export function registerApi(data){
+    return request({
+      url: 'register',
+      method: 'post',
+      data      
+    })
+}
+
 export function chatMessageApi(){
     return request({
       url: 'chat_message',

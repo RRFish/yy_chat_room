@@ -4,9 +4,9 @@ export default createStore({
   state() {
     return {
       userinfo:{
-        account:"",
-        password:"",
-        token:"",
+        user_id: undefined,
+        account: undefined,
+        nickname: undefined
       },
       chatMessage:[],
     };
@@ -14,7 +14,7 @@ export default createStore({
   mutations: {
     login(state, data) {
         state.userinfo = data;
-        console.log("userinfo", state.userinfo)
+        console.log("userinfo", state.userinfo, data)
     },
     chatMessagePush(state, data) {
       state.chatMessage.push(data);

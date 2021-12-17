@@ -3,18 +3,19 @@
   <div>帳號: <input v-model="loginForm.account" type="text"></div>
   <div>密碼: <input v-model="loginForm.password" type="text"></div>
   <button @click="loginHandle">登入</button>
+  <button @click="registerHandle">註冊</button>
 </template>
 
 <script>
-import { loginApi } from "@/api";
+import { loginApi, registerApi } from "@/api";
 
 export default {
     name: "Login",
     data(){
         return {
             loginForm:{
-                account: "user",
-                password: "123456"
+                account: "",
+                password: ""
             }
         }
     },
@@ -22,12 +23,21 @@ export default {
         loginHandle(){
             loginApi(this.loginForm).then((res) => {
                 if(res.data.code==200){
-                    this.$store.dispatch("login", res.data).then(()=>{
+                    this.$store.dispatch("login", res.data.data).then(()=>{
                         this.$router.push("/index")
                     })
                 }
             })
         },
+        registerHandle(){
+            registerApi(this.loginForm).then((res) => {
+                if(res.data.code==200){
+                    this.$store.dispatch("login", res.data.data).then(()=>{
+                        this.$router.push("/index")
+                    })
+                }
+            })
+        }
     }
 };
 </script>
