@@ -1,13 +1,24 @@
 import axios from 'axios'
 import { apiUrl} from "@/config.js"
+import store from '@/store'
+import { authTokenGet } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
     baseURL: apiUrl,
-    // baseURL: process.env.VUE_APP_LOCAL_API, // url = base url + request url
-    // withCredentials: true, // send cookies when cross-domain requests
     timeout: 15000 // request timeout
 })
+
+// request interceptor
+service.interceptors.request.use(
+  config => {
+    config.headers['Authorization'] = authTokenGet()
+    return config
+  },
+  error => {
+    return Promise.reject(error)
+  }
+)
 
 // response interceptor
 service.interceptors.response.use(
@@ -16,13 +27,6 @@ service.interceptors.response.use(
       if (res.status === 400) {
         return Promise.reject(new Error(res.message || 'Error'))
       } else {
-        // if (res.message) {
-        //     Message({
-        //     message: res.message,
-        //     type: 'success',
-        //     duration: 5 * 1000
-        //     })
-        // }
         return res
       }
     },

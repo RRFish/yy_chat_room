@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "axios": "^0.24.0",
+    "js-cookie": "^3.0.1",
     "socket.io-client": "^4.4.0",
     "vue": "^3.2.16",
     "vue-router": "^4.0.12",

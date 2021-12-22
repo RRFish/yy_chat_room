@@ -1,6 +1,6 @@
-var mysql = require("mysql")
+const mysql = require("mysql")
 
-var pool = mysql.createPool({
+const pool = mysql.createPool({
     connectionLimit : 10,
     host: 'localhost',
     user: "root",
@@ -18,7 +18,6 @@ exports.query = async function query(query, values){
                     connection.query(query, values, function (error, results) {
                         connection.release();
                         if (error){
-                            console.log("原語句", this.query)
                             reject(error)
                         } else{
                             resolve(results) 

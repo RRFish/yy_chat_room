@@ -22,11 +22,9 @@ export default {
         }
       }
     },
-    created(){
+    created() {
       this.getChatMessage()
-    },
-    mounted(){
-      window.scrollTo(0,document.body.scrollHeight);
+      this.$store.dispatch("userinfoAction")
     },
     methods:{
       sendChatMessage(){
@@ -36,6 +34,7 @@ export default {
       getChatMessage(){
         chatMessageApi().then((res)=>{
           this.$store.dispatch("chatMessageSet", res.data.data)
+          window.scrollTo(0,document.body.scrollHeight);
         })
       },
       getMessageClass(user_id){
