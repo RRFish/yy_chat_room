@@ -1,11 +1,13 @@
 <template>
-  <h1>yy聊天室登入頁</h1>
-  <div v-show="loginForm.isRegister">暱稱: <input v-model="loginForm.nickname" type="text"></div>
-  <div>帳號: <input v-model="loginForm.account" type="text"></div>
-  <div>密碼: <input v-model="loginForm.password" type="password"></div>
-  <button @click="loginHandle">登入</button>
-  <button @click="loginForm.isRegister=!loginForm.isRegister">{{ registerButtonLabel }}</button>
-  <button @click="registerHandle">提交</button>
+    <div>
+        <h1>yy聊天室登入頁</h1>
+        <div v-show="loginForm.isRegister">暱稱: <input v-model="loginForm.nickname" type="text"></div>
+        <div>帳號: <input v-model="loginForm.account" type="text"></div>
+        <div>密碼: <input v-model="loginForm.password" type="password"></div>
+        <button @click="loginHandle">登入</button>
+        <button @click="loginForm.isRegister=!loginForm.isRegister">{{ registerButtonLabel }}</button>
+        <button v-show="loginForm.isRegister" @click="registerHandle">提交</button>        
+    </div>
 
 
 </template>
