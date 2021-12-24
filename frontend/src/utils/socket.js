@@ -4,7 +4,6 @@ const socket = io("http://localhost:7000");
 
 socket.on("chat message", async (data)=>{
   await store.dispatch("chatMessagePush",data)
-  window.scrollTo(0,document.body.scrollHeight);
 })
 
 function sendMessageSocket(message){

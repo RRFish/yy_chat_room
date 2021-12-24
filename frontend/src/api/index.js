@@ -32,4 +32,15 @@ export function chatMessageApi(){
   })
 }
 
+export function chatFileUploadApi(data){
+  return request({
+    url: 'chat_file_upload',
+    headers: {
+      'Content-type': 'multipart/form-data'
+    },    
+    method: 'post',
+    data
+  })
+}
+
 

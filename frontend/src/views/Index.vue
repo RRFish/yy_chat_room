@@ -1,51 +1,103 @@
 <template>
   <div ref="chat_room">
     <ul id="messages">
-      <li v-for="item in messagesComputed" :key="item" :class="{'message-self': item.user_id === $store.state.userinfo.user_id }">{{item.nickname}}-{{ item.message }}</li>
+      <li v-for="item in messagesComputed" :key="item" :class="{'message-self': item.user_id === $store.state.userinfo.user_id }">
+        <span v-show="item.type==0">{{item.nickname}}-{{ item.message }}</span>
+        <img v-show="item.type==1" :src="apiUrl+'/'+item.message">
+        <video v-show="item.type==2" :src="apiUrl+'/'+item.message" controls></video>
+      </li>
     </ul>
-    <form id="form" action="">
-      <input ref="input" id="input" v-model="messageForm.message" autocomplete="off" /><button @click.prevent="sendChatMessage">Send</button>
-    </form>
+    <div id="form" action="">
+      <button @click.prevent="uploadFileClick">上傳</button>
+      <input type="file" ref="inputFile" @change="uploadFileChange" id="inputFile">
+      <input id="input" v-model="messageForm.message" autocomplete="off" v-on:keyup.enter="sendChatMessage"/>
+      <button @click.prevent="sendChatMessage">Send</button>
+    </div>
   </div>
 </template>
 
 <script>
-import { loginApi, chatMessageApi } from "@/api"
+import { loginApi, chatMessageApi, chatFileUploadApi } from "@/api"
 import { sendMessageSocket } from "@/utils/socket.js"
-
+import { apiUrl} from "@/config.js"
 export default {
     name: "Index",
     data(){
       return {
         messageForm:{
-          message: undefined
-        }
+          message: undefined,
+          file: undefined,
+          fileName: undefined,
+        },
+        apiUrl: apiUrl
       }
     },
     created() {
       this.getChatMessage()
-      this.$store.dispatch("userinfoAction")
+    },
+    mounted() {
+      this.observeHeight()
     },
     methods:{
       sendChatMessage(){
-        sendMessageSocket(this.messageForm.message)
-        this.messageForm.message = undefined
+        try{
+          if(this.messageForm.message.length>0){
+            sendMessageSocket(this.messageForm.message)
+            this.messageForm.message = undefined
+          }
+        }catch{}
       },
       getChatMessage(){
         chatMessageApi().then((res)=>{
           this.$store.dispatch("chatMessageSet", res.data.data)
-          window.scrollTo(0,document.body.scrollHeight);
         })
       },
       getMessageClass(user_id){
         if(user_id==this.$store.state.userinfo.user_id) return "message-self"
         return "message_other"
+      },
+      uploadFileClick() {
+        this.$refs['inputFile'].click()
+      },
+      uploadFileChange(e) {
+        const files = e.target.files || e.dataTransfer.files
+        const allowTypes = ['png', 'jpg', 'gif', 'mp4']
+        if (!files.length) { return }
+        if (!allowTypes.includes(files[0].name.split('.')[1].toLowerCase())) {
+          this.messageForm.file = undefined
+          this.messageForm.fileName = undefined
+          return
+        }
+        this.messageForm.fileName = files[0].name
+        this.messageForm.file = files[0]
+        const form = new FormData()
+        Object.keys(this.messageForm).forEach((key)=>{
+          form.append(key, this.messageForm[key]) 
+        })
+        chatFileUploadApi(form).then(() => {
+          // this.searchHandle()
+        })        
+      },
+      observeHeight() {//監聽視窗大小變化 當新訊息進來時scroll到最底
+        const resizeObserver = new ResizeObserver(function() {
+          window.scrollTo(0,document.body.scrollHeight);
+        });
+
+        resizeObserver.observe(this.$refs.chat_room);
       }
     },
     computed: {
       messagesComputed(){
         return this.$store.state.chatMessage
       },
+      messageImageUrlComputed(){
+        try{
+          if(this.messageForm.file) return URL.createObjectURL(this.messageForm.file)
+        }
+        finally{
+          return ""
+        }
+      }
     }
 };
 </script>
@@ -66,4 +118,5 @@ export default {
     background: #efefef !important;
   }
 
+  #inputFile { display: none; }
 </style>
