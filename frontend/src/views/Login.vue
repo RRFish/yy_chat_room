@@ -6,9 +6,6 @@
   <button @click="loginHandle">登入</button>
   <button @click="loginForm.isRegister=!loginForm.isRegister">{{ registerButtonLabel }}</button>
   <button @click="registerHandle">提交</button>
-  <div>
-    <button @click="getUserinfo">測試</button>
-  </div>
 
 
 </template>
